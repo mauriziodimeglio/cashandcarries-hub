@@ -4,8 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E9F94">
-<meta name="description" content="FitVerse: i tre profili Instagram e le guide gratuite. Contenuto informativo con disclaimer. Siamo affiliati Digistore24, non il produttore.">
-<title>FitVerse | Profili e guide</title>
+<title>FitVerse | Allenamento over 40 e guide</title>
+<meta name="description" content="Profili Instagram e guide gratuite per l'allenamento over 40. Contenuti informativi con disclaimer. Affiliati Digistore24, non il produttore.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cashandcarries.com/">
+<link rel="alternate" hreflang="it" href="https://cashandcarries.com/">
+<link rel="alternate" hreflang="en" href="https://cashandcarries.com/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://cashandcarries.com/">
+<meta property="og:title" content="FitVerse | Allenamento over 40 e guide">
+<meta property="og:description" content="Profili Instagram e guide gratuite per l'allenamento over 40. Contenuti informativi con disclaimer. Affiliati Digistore24, non il produttore.">
+<meta property="og:url" content="https://cashandcarries.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FitVerse">
+<meta property="og:locale" content="it_IT">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FitVerse | Allenamento over 40 e guide">
+<meta name="twitter:description" content="Profili Instagram e guide gratuite per l'allenamento over 40. Contenuti informativi con disclaimer. Affiliati Digistore24, non il produttore.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://cashandcarries.com/#organization",
+      "name": "FitVerse",
+      "url": "https://cashandcarries.com/",
+      "sameAs": [
+        "https://www.instagram.com/fitverse_shop/",
+        "https://www.instagram.com/fitverse_over40/",
+        "https://www.instagram.com/strongafter40daily2026/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://cashandcarries.com/#website",
+      "name": "FitVerse",
+      "url": "https://cashandcarries.com/",
+      "inLanguage": [
+        "it",
+        "en"
+      ],
+      "publisher": {
+        "@id": "https://cashandcarries.com/#organization"
+      }
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --teal:#0E9F94;
@@ -495,40 +541,75 @@ html:not([lang="en"]) [data-i="en"]{display:none}
     var root = document.documentElement;
     var buttons = document.querySelectorAll(".lang button");
     var titles = {
-      it: "FitVerse | Profili e guide",
-      en: "FitVerse | Profiles and guides"
+      it: "FitVerse | Allenamento over 40 e guide",
+      en: "FitVerse | Strength training after 40"
     };
     var descriptions = {
-      it: "FitVerse: i tre profili Instagram e le guide gratuite. Contenuto informativo con disclaimer. Siamo affiliati Digistore24, non il produttore.",
-      en: "FitVerse: the three Instagram profiles and the free guides. Informational content with disclaimers. We are Digistore24 affiliates, not the vendor."
+      it: "Profili Instagram e guide gratuite per l'allenamento over 40. Contenuti informativi con disclaimer. Affiliati Digistore24, non il produttore.",
+      en: "Instagram profiles and free guides for strength training after 40. Informational content with disclaimers. Digistore24 affiliates, not the vendor."
     };
+    var urls = {
+      it: "https://cashandcarries.com/",
+      en: "https://cashandcarries.com/?lang=en"
+    };
+    var locales = { it: "it_IT", en: "en_US" };
     var descTag = document.querySelector('meta[name="description"]');
+    var canonicalTag = document.querySelector('link[rel="canonical"]');
+    var ogTitle = document.querySelector('meta[property="og:title"]');
+    var ogDesc = document.querySelector('meta[property="og:description"]');
+    var ogUrl = document.querySelector('meta[property="og:url"]');
+    var ogLocale = document.querySelector('meta[property="og:locale"]');
+    var twTitle = document.querySelector('meta[name="twitter:title"]');
+    var twDesc = document.querySelector('meta[name="twitter:description"]');
+
+    function currentPath(){
+      return location.pathname + (location.search || "") + (location.hash || "");
+    }
+
+    function targetPath(lang){
+      var path = location.pathname || "/";
+      return lang === "en" ? path + "?lang=en" : path;
+    }
+
+    function setMeta(el, attr, value){
+      if(el) el.setAttribute(attr, value);
+    }
 
     function setLang(lang){
       if(lang !== "en" && lang !== "it") lang = "it";
       root.setAttribute("lang", lang);
       document.title = titles[lang];
-      if(descTag) descTag.setAttribute("content", descriptions[lang]);
+      setMeta(descTag, "content", descriptions[lang]);
+      setMeta(canonicalTag, "href", urls[lang]);
+      setMeta(ogTitle, "content", titles[lang]);
+      setMeta(ogDesc, "content", descriptions[lang]);
+      setMeta(ogUrl, "content", urls[lang]);
+      setMeta(ogLocale, "content", locales[lang]);
+      setMeta(twTitle, "content", titles[lang]);
+      setMeta(twDesc, "content", descriptions[lang]);
       buttons.forEach(function(btn){
         btn.setAttribute("aria-pressed", btn.getAttribute("data-lang") === lang ? "true" : "false");
       });
       try{ localStorage.setItem("fitverse-hub-lang", lang); }catch(e){}
-      if(location.hash === "#en" && lang !== "en"){
-        if(history.replaceState) history.replaceState(null, "", location.pathname + location.search);
-      } else if(lang === "en" && location.hash !== "#en"){
-        if(history.replaceState) history.replaceState(null, "", "#en");
+      var next = targetPath(lang);
+      if(currentPath() !== next && history.replaceState){
+        history.replaceState(null, "", next);
       }
     }
 
-    var initial = "it";
-    try{
-      if(location.hash === "#en") initial = "en";
-      else {
+    function readInitial(){
+      try{
+        var params = new URLSearchParams(location.search);
+        var q = params.get("lang");
+        if(q === "en" || q === "it") return q;
+        if(location.hash === "#en") return "en";
         var saved = localStorage.getItem("fitverse-hub-lang");
-        if(saved === "en" || saved === "it") initial = saved;
-      }
-    }catch(e){}
-    setLang(initial);
+        if(saved === "en" || saved === "it") return saved;
+      }catch(e){}
+      return "it";
+    }
+
+    setLang(readInitial());
 
     buttons.forEach(function(btn){
       btn.addEventListener("click", function(){ setLang(btn.getAttribute("data-lang")); });
